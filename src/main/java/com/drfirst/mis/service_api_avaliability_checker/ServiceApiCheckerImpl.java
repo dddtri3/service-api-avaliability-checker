@@ -27,10 +27,14 @@ public class ServiceApiCheckerImpl implements ServiceApiChecker {
 
 	private static Logger logger = Logger.getLogger(ServiceApiCheckerImpl.class);
 	private int concurrentRunThread =2;
+	private final String baseDir= "D:\\instanceTest";
 
 	@Override
 	public void run() {
-		//TODO: read from csv file
+		File srcListFile = new File(getBaseDir(),"host.csv");
+		
+		srcListFile.
+		
 		List<HostEntry> hostsList = new ArrayList<HostEntry>();
 		//TODO: dicover xml files
 		List<String> xmls =  new ArrayList<String>();
@@ -61,7 +65,7 @@ public class ServiceApiCheckerImpl implements ServiceApiChecker {
 				paraMap.put(MisSupportApiData.INPUT_XML_NAME, xmlList);
 				paraMap.put(MisSupportApiData.INPUT_MAC_NAME, xmlList);
 				paraMap.put(MisSupportApiData.INPUT_TIME_NAME, xmlList);
-				//TODO: fill my parameters
+				paraMap.put(MisSupportApiData.INPUT_AUTH_NAME, xmlList);
 
 				datas.add(TestDataFactory.create(MisSupportApiData.class, hostEntry.getHost() + MisSupportApiData.URI));	
 
@@ -91,6 +95,9 @@ public class ServiceApiCheckerImpl implements ServiceApiChecker {
 			}
 		}
 
+	}
+	private String getBaseDir(){
+		return baseDir;
 	}
 
 }

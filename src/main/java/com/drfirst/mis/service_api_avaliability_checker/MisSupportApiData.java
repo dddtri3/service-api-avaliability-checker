@@ -33,6 +33,12 @@ public class MisSupportApiData extends AbstractApiData {
 	
 	public static final String INPUT_XML_NAME = "xml";
 	
+	public static final String INPUT_TIME_NAME = "time";
+	
+	public static final String INPUT_AUTH_NAME = "skipAuth";
+	
+	public static final String INPUT_MAC_NAME = "MAC";
+	
 	public static final String OUTPUT_RESULT_MAP = "resultMap";
 	
 
