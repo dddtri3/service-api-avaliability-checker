@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 
 import com.dddtri.qa.api.ClientRunner;
 import com.dddtri.qa.api.MockClientRunner;
-import com.dddtri.qa.api.data.AbstractTestData;
+import com.dddtri.qa.api.data.AbstractApiData;
 import com.dddtri.qa.api.data.TestData;
 import com.dddtri.qa.api.data.TestDataFactory;
 
@@ -87,12 +87,10 @@ public class ServiceApiCheckerImpl implements ServiceApiChecker {
 			logger.info(String.format("check run completed that took [%s] amount of time...", System.currentTimeMillis() -  currentTime));
 			
 			//generate report
-			for (TestData data : datas) {
-				AbstractTestData testData = (AbstractTestData) data;
-				//testData.getMetadat(key)
+			LogGen logGen = new LogGenImpl(datas);
+			logGen.run();
+			logger.info(String.format("report gen for instance [%s]. completed ...", hostEntry.getHost()));
 
-				//TODO: distinguish bad & good result & output
-			}
 		}
 
 	}
