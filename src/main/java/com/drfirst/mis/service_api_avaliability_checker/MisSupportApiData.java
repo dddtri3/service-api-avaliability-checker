@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import com.dddtri.qa.api.cmd.Command;
 import com.dddtri.qa.api.cmd.HttpServiceCallCommand;
+import com.dddtri.qa.api.data.AbstractApiData;
 import com.dddtri.qa.api.listener.Dao;
 import com.dddtri.qa.api.listener.AbstractDbVerifierObserver;
 import com.dddtri.qa.api.listener.HttpResponseVerifierObserver;

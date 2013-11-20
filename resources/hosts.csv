@@ -1,0 +1,7 @@
+host,time,authuser,mac
+//region 1
+http://172.16.1.51:54001/servlet/rcopia.servlet.EngineServlet,022107174910,y,27D837945B95F1BD0C65B42A30B6A0FC
+
+
+
+//region 2
