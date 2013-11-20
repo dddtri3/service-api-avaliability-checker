@@ -59,6 +59,8 @@ public class ServiceApiCheckerImpl implements ServiceApiChecker {
 					logger.error(String.format("skipped creatin data for xml[%s] dued to following stacktrace", xml), e);
 				}
 				paraMap.put(MisSupportApiData.INPUT_XML_NAME, xmlList);
+				paraMap.put(MisSupportApiData.INPUT_MAC_NAME, xmlList);
+				paraMap.put(MisSupportApiData.INPUT_TIME_NAME, xmlList);
 				//TODO: fill my parameters
 
 				datas.add(TestDataFactory.create(MisSupportApiData.class, hostEntry.getHost() + MisSupportApiData.URI));	

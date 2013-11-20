@@ -19,11 +19,20 @@ import com.dddtri.qa.tc.junit.AbstractJunit4TestBase;
 
 public class ServiceApiCheckerTest extends AbstractJunit4TestBase {
 
+	final String baseDir= "D:\\instanceTest";
+	
 	@Test
 	public void test() throws Exception {
 		
+		File srcListFile = new File(getBaseDir(),"host.csv");
 		
+		srcListFile.
 		
 		
 	}
+	
+	private String getBaseDir(){
+		return baseDir;
+	}
+
 }

@@ -48,11 +48,8 @@ public class MisSupportApiData extends AbstractApiData {
 
 			public Object assertBody(Object... args) {
 				ResultMap resultMap = null;
-				AbstractApiData[] apiDatas = null; 
-				for(int i=0; i<=args.length;i++){
-					
-				AbstractApiData apiData = (AbstractApiData) args[i];
-				apiDatas[i]=apiData;
+	
+				AbstractApiData apiData = (AbstractApiData) args[0];
 				String response=apiData.getResponse();
 
 				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -89,13 +86,10 @@ public class MisSupportApiData extends AbstractApiData {
 				if(actStatus != "ok"){
 					throw new RuntimeException("the status is not ok!");
 				}
-								
-	
+							
 				apiData.putMetadata(OUTPUT_RESULT_MAP, resultMap);
 
-
-			}
-				return apiDatas;
+				return apiData;
 			}
 			});
 	}
