@@ -1,9 +1,11 @@
 package com.drfirst.mis.service_api_avaliability_checker;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,18 +15,26 @@ import com.dddtri.qa.api.data.AbstractApiData;
 import com.dddtri.qa.api.listener.Dao;
 import com.dddtri.qa.api.listener.AbstractDbVerifierObserver;
 import com.dddtri.qa.api.listener.HttpResponseVerifierObserver;
+
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class MisSupportApiData extends AbstractApiData {
-
+	
 	public static final String URI = "/servlet/rcopia.servlet.EngineServlet";
 	
 	public static final String INPUT_XML_NAME = "xml";
+	
+	public static final String OUTPUT_RESULT_MAP = "resultMap";
+	
 
 	private Map<String, List<String>> paras;
 	
@@ -37,29 +47,63 @@ public class MisSupportApiData extends AbstractApiData {
 		this.registerVerifierObserver(new HttpResponseVerifierObserver() {
 
 			public Object assertBody(Object... args) {
-				AbstractApiData apiData = (AbstractApiData) args[0];
+				ResultMap resultMap = null;
+				AbstractApiData[] apiDatas; 
+				for(int i=0; i<=args.length;i++){
+					
+				AbstractApiData apiData = (AbstractApiData) args[i];
+				apiDatas.
+				String response=apiData.getResponse();
+
+				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder dBuilder = null;
+				try {
+					dBuilder = dbFactory.newDocumentBuilder();
+				} catch (ParserConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Document doc = null;
+				try {
+					doc = dBuilder.parse(response);
+				} catch (SAXException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				doc.getDocumentElement().normalize();
 				
-				//extract instance name
-				//ex: Server uptime in milisecond -- 1004255746; Server/Instance Name: ctintweb01_CERT_moxyadmin Server Version: MoxyAdmin 2.0.2
-				//ex: Server/Instance Name: My Server Name; Server Version: 1.0.0
-				final String pattern = ".+Instance\\sName:\\s+(.*)\\s+Server\\sVersion:\\s+?(.*)";
-				Pattern p = Pattern.compile(pattern);
-				Matcher m = p.matcher(apiData.getResponse());
-				m.find();
-				String instName = m.group(1);
-				apiData.putMetadata(METADATA_ID_INSTANCENAME, instName);
+				NodeList nodes = doc.getElementsByTagName("Response");
+				if (nodes.getLength()>1){
+					throw new RuntimeException("there are more than 1 nodes in response!");
+				}
+				Element responseEle = (Element) nodes.item(0);
+				
+				if (responseEle.getElementsByTagName("Status").getLength()>1){
+					throw new RuntimeException("there are more than 1 nodes in <response> <status>!");
+				}
+				Node statusNodes = responseEle.getElementsByTagName("Status").item(0);
+				String actStatus=statusNodes.getNodeValue();
+				resultMap.setStatus(actStatus);
+				if(actStatus != "ok"){
+					throw new RuntimeException("the status is not ok!");
+				}
+								
+	
+				apiData.putMetadata(OUTPUT_RESULT_MAP, resultMap);
+
+
+			}
 				return apiData;
 			}
-			
-		});
+			});
 	}
 
-	@Override
 	public Dao[] getDaos() {
 		return new Dao[]{};
 	}
 
-	@Override
 	public Command getCmdChain() {
 		return new HttpServiceCallCommand(this);
 	}
