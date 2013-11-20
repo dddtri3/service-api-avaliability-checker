@@ -48,11 +48,11 @@ public class MisSupportApiData extends AbstractApiData {
 
 			public Object assertBody(Object... args) {
 				ResultMap resultMap = null;
-				AbstractApiData[] apiDatas; 
+				AbstractApiData[] apiDatas = null; 
 				for(int i=0; i<=args.length;i++){
 					
 				AbstractApiData apiData = (AbstractApiData) args[i];
-				apiDatas.
+				apiDatas[i]=apiData;
 				String response=apiData.getResponse();
 
 				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -95,7 +95,7 @@ public class MisSupportApiData extends AbstractApiData {
 
 
 			}
-				return apiData;
+				return apiDatas;
 			}
 			});
 	}
