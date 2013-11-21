@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -20,7 +19,6 @@ import org.apache.log4j.Logger;
 
 import com.dddtri.qa.api.ClientRunner;
 import com.dddtri.qa.api.MockClientRunner;
-import com.dddtri.qa.api.data.AbstractApiData;
 import com.dddtri.qa.api.data.TestData;
 import com.dddtri.qa.api.data.TestDataFactory;
 
@@ -42,10 +40,12 @@ public class ServiceApiCheckerImpl implements ServiceApiChecker {
 		List<HostEntry> hostsList =this.getParaFromFile();
 		//TODO: dicover xml files
 		List<String> xmls =  new ArrayList<String>();
+		List<String> testcaseNames = new ArrayList<String>();
 		File dir = null;
 		for (File xmlFile : dir.listFiles()) {
 				try {
 					xmls.add(FileUtils.readFileToString(xmlFile));
+					testcaseNames.add(xmlFile.getName());
 					logger.info("discovered [%s] amount of xml apis..");
 				} catch (IOException e) {
 					logger.error(String.format("skipped recognizing xml[%s] dued to following stacktrace", xmlFile.getAbsoluteFile()), e);
@@ -56,6 +56,7 @@ public class ServiceApiCheckerImpl implements ServiceApiChecker {
 		for (HostEntry hostEntry : hostsList) {
 
 			// data preparation
+			int i = 0;
 			List<TestData> datas = new ArrayList<TestData>();
 			for (String xml : xmls) {
 
@@ -71,8 +72,10 @@ public class ServiceApiCheckerImpl implements ServiceApiChecker {
 				paraMap.put(MisSupportApiData.INPUT_TIME_NAME, xmlList);
 				paraMap.put(MisSupportApiData.INPUT_AUTH_NAME, xmlList);
 
-				datas.add(TestDataFactory.create(MisSupportApiData.class, hostEntry.getHost() + MisSupportApiData.URI));	
-
+				MisSupportApiData data = TestDataFactory.create(MisSupportApiData.class, hostEntry.getHost() + MisSupportApiData.URI);
+				data.putMetadata(MisSupportApiData.OUTPUT_TESTCASE_NAME, testcaseNames.get(i));
+				datas.add(data);	
+				i ++;
 			}
 			logger.info(String.format("prepared [%s] amount of apis. for host[%s]...", datas.size(), hostEntry.getHost()));
 
@@ -84,7 +87,6 @@ public class ServiceApiCheckerImpl implements ServiceApiChecker {
 			try {
 				runner.run(datas.toArray(new TestData[]{}));
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 

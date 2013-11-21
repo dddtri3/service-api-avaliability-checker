@@ -2,20 +2,8 @@ package com.drfirst.mis.service_api_avaliability_checker;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.dddtri.qa.api.cmd.Command;
-import com.dddtri.qa.api.cmd.HttpServiceCallCommand;
-import com.dddtri.qa.api.data.AbstractApiData;
-import com.dddtri.qa.api.listener.Dao;
-import com.dddtri.qa.api.listener.AbstractDbVerifierObserver;
-import com.dddtri.qa.api.listener.HttpResponseVerifierObserver;
-
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,7 +15,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.dddtri.qa.api.cmd.Command;
+import com.dddtri.qa.api.cmd.HttpServiceCallCommand;
+import com.dddtri.qa.api.data.AbstractApiData;
+import com.dddtri.qa.api.listener.Dao;
+import com.dddtri.qa.api.listener.HttpResponseVerifierObserver;
 public class MisSupportApiData extends AbstractApiData {
+
 	
 	public static final String URI = "/servlet/rcopia.servlet.EngineServlet";
 	
@@ -40,6 +34,8 @@ public class MisSupportApiData extends AbstractApiData {
 	public static final String INPUT_MAC_NAME = "MAC";
 	
 	public static final String OUTPUT_RESULT_MAP = "resultMap";
+	
+	public static final String OUTPUT_TESTCASE_NAME = "output.testcase.name";
 	
 
 	private Map<String, List<String>> paras;
