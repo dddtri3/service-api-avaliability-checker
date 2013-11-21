@@ -17,18 +17,19 @@ import com.dddtri.qa.api.data.AbstractApiData;
 import com.dddtri.qa.api.data.TestData;
 
 /**
- * 
+ * A class that generates Log ouput
+ *  
  * @author daniel.shih
  *
  */
 public class LogGenImpl implements LogGen {
 
 	private static Logger logger = Logger.getLogger(LogGenImpl.class);
-	
+
 	public static final String LOG_DIR = "./log/";
-	
+
 	public static final String PASS_FOLDER_NAME = "pass";
-	
+
 	public static final String FAIL_FOLDER_NAME = "fail";
 
 	private List<TestData> datas;
@@ -51,54 +52,51 @@ public class LogGenImpl implements LogGen {
 					successLogMap.put(testData.getBaseUrl(), new StringBuilder());
 				}
 				successLogMap.get(testData.getBaseUrl()).append(resultMap.getTestcaseName() + "," + resultMap.getStatus() + "\n");
-				//writeToPassLog(currentTime, successLog, testData.getBaseUrl());
 			} else {
 				if (! failLogMap.containsKey(testData.getBaseUrl())) {
 					failLogMap.put(testData.getBaseUrl(), new StringBuilder());
 				}
 				failLogMap.get(testData.getBaseUrl()).append(resultMap.getTestcaseName() + "," + resultMap.getStatus() + "\n");
-				//writeToFailLog(currentTime, badLog, testData.getBaseUrl());
 			}
 		}
-		
+
 		for (Entry<String, StringBuilder> row : successLogMap.entrySet()) {
 			this.writeToPassLog(currentTime, row.getValue(), row.getKey());
 		}
-		
+
 		for (Entry<String, StringBuilder> row : failLogMap.entrySet()) {
 			this.writeToFailLog(currentTime, row.getValue(), row.getKey());
 		}
 
 	}
 	private void writeToPassLog(long currentTime, StringBuilder successLog, String baseUrl) {
+
 		File successLogFile;
-		String filePath = LOG_DIR + "/" +  PASS_FOLDER_NAME + "/" + URLEncoder.encode((
-				baseUrl + "_" + currentTime + ".log"));
+		String filePath = null;
 		try {
+			filePath = LOG_DIR + "/" +  PASS_FOLDER_NAME + "/" + URLEncoder.encode(
+					baseUrl + "_" + currentTime + ".log", "UTF-8");
 			successLogFile = new File(filePath);
-			successLogFile.getAbsolutePath();
-			if (successLogFile.isFile()) {
-				FileUtils.writeLines(successLogFile, Arrays.asList(successLog.toString()));
-			} else {
-				FileUtils.writeStringToFile(successLogFile, successLog.toString());	
-			}
-			
+			logger.info(String.format("Generating pass log for instance[%s] at [%s]...", baseUrl, successLogFile.getAbsolutePath()));
+			FileUtils.writeStringToFile(successLogFile, successLog.toString());	
+
 		} catch (UnsupportedEncodingException e) {
-			logger.error(String.format("Unable to create success log[%s]", filePath) , e);
+			logger.error(String.format("Unable to enocode file path that contains baseUrl[%s]", baseUrl) , e);
 		} catch (IOException e) {
 			logger.error(String.format("Unable to create success log[%s]", filePath) , e);
 		}
 	}
 	private void writeToFailLog(long currentTime, StringBuilder badLog, String baseUrl) {
 		File failLogFile;
-		String filePath = LOG_DIR + "/" +  FAIL_FOLDER_NAME + "/" + URLEncoder.encode((
-				baseUrl + "_" + currentTime + ".log"));
+		String filePath = null;
 		try {
+			filePath = LOG_DIR + "/" +  FAIL_FOLDER_NAME + "/" + URLEncoder.encode(
+					baseUrl + "_" + currentTime + ".log", "UTF-8");
 			failLogFile = new File(filePath);
-			failLogFile.getAbsolutePath();
+			logger.info(String.format("Generating fail log for instance[%s] at [%s]...", baseUrl, failLogFile.getAbsolutePath()));
 			FileUtils.writeStringToFile(failLogFile, badLog.toString());
 		} catch (UnsupportedEncodingException e) {
-			logger.error(String.format("Unable to create fail log[%s]", filePath) , e);
+			logger.error(String.format("Unable to enocode file path that contains baseUrl[%s]", baseUrl) , e);
 		} catch (IOException e) {
 			logger.error(String.format("Unable to create fail log[%s]", filePath) , e);
 		}
