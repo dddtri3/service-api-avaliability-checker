@@ -43,9 +43,19 @@ public class LogGenImpl implements LogGen {
 		//generate report
 		Map<String, StringBuilder> successLogMap = new HashMap<String, StringBuilder>();
 		Map<String, StringBuilder> failLogMap = new HashMap<String, StringBuilder>();
+		
+		//collect log
 		for (TestData data : datas) {
 			AbstractApiData testData = (AbstractApiData) data;
-			ResultMap resultMap = (ResultMap) testData.getMetadat(MisSupportApiData.OUTPUT_RESULT_MAP);
+			
+			//ignore unexpected api data
+			Object obj = testData.getMetadat(MisSupportApiData.OUTPUT_RESULT_MAP);
+			if (obj == null) {
+				logger.warn(String.format("Skip log gen. for api data with no result map![%s][%s]", testData.getClass(), testData.getBaseUrl() + testData.getParameters()));
+				continue;
+			}
+			ResultMap resultMap = (ResultMap) obj;
+			
 
 			if ("ok".equals(resultMap.getStatus().toLowerCase().trim())) {
 				if (! successLogMap.containsKey(testData.getBaseUrl())) {

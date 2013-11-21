@@ -69,6 +69,16 @@ public class LogGenImplTest extends AbstractJunit4TestBase {
 		resultMap.setTestcaseName("send_patient2");
 		anotherHostBadApiData.putMetadata(MisSupportApiData.OUTPUT_RESULT_MAP, resultMap);
 		
+		
+		
+		MisSupportApiData noResultMapApiData = createDefaultApiData();
+		noResultMapApiData.setBaseUrl("https://www.noResultMapApiData.com");
+		datas.add(noResultMapApiData);
+		/*		resultMap = new ResultMap();
+		resultMap.setStatus("no ok");
+		resultMap.setTestcaseName("send_patient2");
+		noResultMapApiData.putMetadata(MisSupportApiData.OUTPUT_RESULT_MAP, resultMap);*/
+		
 		//execute
 		LogGen runner = new LogGenImpl(datas);
 		runner.run();
